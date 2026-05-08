@@ -71,7 +71,7 @@ export default async function DashboardPage() {
 
       <RecentTransactions transactions={transactions} />
 
-      <LinkedAccountStrip linkedAccounts={linkedAccounts} userId={user.id} />
+      {/* <LinkedAccountStrip linkedAccounts={linkedAccounts} userId={user.id} /> */}
     </div>
   );
 }
