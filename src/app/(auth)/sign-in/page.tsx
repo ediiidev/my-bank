@@ -1,5 +1,5 @@
 "use client";
-
+import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { createZodResolver } from "@/lib/form-resolver";
@@ -17,6 +17,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Span } from "next/dist/trace/trace";
 
 export default function SignInPage() {
   const {
@@ -33,6 +35,8 @@ export default function SignInPage() {
     await execute(data);
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <Card>
       <CardHeader>
@@ -41,39 +45,59 @@ export default function SignInPage() {
       </CardHeader>
       <CardContent>
         <form id="sign-in-form" onSubmit={onSubmit} className="grid gap-4">
+          {/* Email */}
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              autoComplete="email"
-              {...register("email")}
-              aria-invalid={!!errors.email}
-            />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                autoComplete="email"
+                {...register("email")}
+                aria-invalid={!!errors.email}
+                className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+
             {errors.email && (
               <p className="text-xs text-destructive">{errors.email.message}</p>
             )}
           </div>
 
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <a
-                href="/forgot-password"
-                className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+          {/* Password */}
+          <div>
+            <Label
+              className="block text-sm font-medium text-slate-700 mb-2"
+              htmlFor="password"
+            >
+              Password
+            </Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                autoComplete="current-password"
+                {...register("password")}
+                aria-invalid={!!errors.password}
+                className="w-full pl-11 pr-11 py-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
               >
-                Forgot your password?
-              </a>
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
             </div>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              autoComplete="current-password"
-              {...register("password")}
-              aria-invalid={!!errors.password}
-            />
+
             {errors.password && (
               <p className="text-xs text-destructive">
                 {errors.password.message}
@@ -81,22 +105,39 @@ export default function SignInPage() {
             )}
           </div>
 
+          {/* Remember & Forgot */}
+          <div className="flex items-center justify-between">
+            <Label className="flex items-center gap-2 cursor-pointer">
+              <Input
+                type="checkbox"
+                className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <span className="text-sm text-slate-600">Remember me</span>
+            </Label>
+            <Link
+              href="/forgot-password"
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            >
+              Do you forgot your password?
+            </Link>
+          </div>
+
           <Button
             type="submit"
             size="lg"
             disabled={isLoading}
-            className="w-full"
+            className="w-full py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all"
           >
             {isLoading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="justify-center">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-center text-sm text-slate-600 mt-6">
           Don&apos;t have an account?{" "}
           <Link
             href="/sign-up"
-            className="font-medium text-primary hover:underline"
+            className="font-medium text-indigo-600 hover:text-indigo-700"
           >
             Sign up
           </Link>

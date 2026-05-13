@@ -17,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Mail, Lock } from "lucide-react";
 
 export default function SignUpPage() {
   const {
